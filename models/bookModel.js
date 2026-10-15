@@ -13,6 +13,7 @@ export const insert = async (book) =>{
         "INSERT INTO book(name,author) VALUES (?,?)",
         [book.name, book.author]
     );
+    return result.insertId;
 }
 
 //Update
@@ -24,4 +25,12 @@ export const insert = async (book) =>{
         
     return result.affectedRows;
 }
- 
+
+
+//delete
+export const remove = async (id) => {
+    const [result] = await pool.query(
+        "DELETE FROM book WHERE id=?", [id]
+    );
+    return result.affectedRows;
+}
