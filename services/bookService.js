@@ -1,21 +1,60 @@
 import * as bookModel from "../models/bookModel.js";
+import ValidationError from "../utils/ValidationError.js";
 
 export const fetchAllBooks = async () => {
   const books = await bookModel.fetchAllBooks();
   return books;
 };
 
+const doesBookExist = async (book) => {
+  let existing;
+  if(Object.hasOwn(book, "id")){
+   existing = await bookModel.findBookById(book.id);
+}else {
+   existing = await bookModel.findBookByNameAndAuthor(book);
+}
+
+  if (existing.length > 0){
+      return true;
+  }
+
+  return false;
+}
+
 export const createBook = async (book) => {
+  if(!book.name || !book.author){
+    throw new ValidationError(404, "Name and Author are required!");
+  }
+  const existing = await doesBookExist(book);
+  if (existing) {
+    throw new ValidationError(409, "Book already exist");
+  }
   const bookId = await bookModel.insert(book);
   return bookId;
 };
 
 export const updateBook = async (book) => {
+  if(!book.name || !book.author){
+    throw new ValidationError(404, "Name and Author are required!");
+  }
+  const existing = await doesBookExist(book);
+  if (!existing) {
+    throw new ValidationError(404, "Book does not exist");
+  }
+
   const affectedRows = await bookModel.update(book);
   return affectedRows;
 };
 
+
+//delete
 export const deleteBook = async (id) => {
-  const affectedRows = await bookModel.remove(id);
-  return affectedRows;
-}
+    const existing = await bookModel.findBookById(id);
+
+    if (existing.length === 0) {
+        throw new ValidationError(404, "Book does not exist");
+    }
+
+    const affectedRows = await bookModel.remove(id);
+    return affectedRows;
+};
