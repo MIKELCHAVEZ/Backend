@@ -6,6 +6,21 @@ export const fetchAllStudents = async () =>{
     return rows;
 };
 
+export const findStudentByNameSrcodeANDProgram = async (student) => {
+    const [rows] = await pool.query(
+        "SELECT * FROM student WHERE name=? AND srcode=? AND program=?",
+        [student.name, student.srcode, student.program]
+    );
+    return rows;
+}
+
+export const findStudentById = async (id) => {
+    const [rows] = await pool.query(
+        "SELECT * FROM student WHERE id=?",
+        [id]
+    );
+    return rows;
+}
 
 export const insert = async (student) =>{
     const [result] = await pool.query(
@@ -24,10 +39,10 @@ export const update = async (student) => {
         return result.affectedRows;
     }
      
-export const remove = async (id) => {
+export const deleteStudent = async (id) => {
     const [result] = await pool.query(
         "DELETE FROM student WHERE id=?", [id]
     );
     return result.affectedRows;
-}
+}   
 

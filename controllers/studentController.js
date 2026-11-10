@@ -18,8 +18,8 @@ export const createStudent = async(req, res) =>{
         });
     }catch(e){
         console.log(e);
-        res.status(500).json({
-            error: "Internal Server Error"
+        res.status(e.statusCode).json({
+            error: e.message,
         });
     }
 }
@@ -37,25 +37,26 @@ export const editStudent = async(req, res) =>{
         });
     }catch(e){
         console.log(e);
-        res.status(500).json({
-            error: "Internal Server Error"
+        res.status(e.statusCode).json({
+            error: e.message,
         });
     }
 }   
 
-export const deleteStudent = async(req, res) =>{
-    const {id} = req.params;
+export const deleteStudent = async (req, res) => {
+    const { id } = req.params;
 
-    try{
+    try {
         const deletedStudent = await studentService.deleteStudent(id);
+
         res.status(200).json({
             success: true,
             message: deletedStudent
         });
-    }catch(e){
+    } catch (e) {
         console.log(e);
-        res.status(500).json({
-            error: "Internal Server Error"
+        res.status(e.statusCode).json({
+            error: e.message
         });
     }
-}   
+}

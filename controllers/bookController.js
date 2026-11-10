@@ -55,7 +55,6 @@ export const deleteBook = async (req, res) => {
 
     } catch (e) {
         console.log(e);
-
         res.status(e.statusCode).json({
             error: e.message
         });
